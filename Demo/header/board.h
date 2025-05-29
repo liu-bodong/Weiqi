@@ -39,7 +39,9 @@ public:
 
     int operator[](const int index) const { return data_[index]; }
 
-    int& operator[](const int index) { return data_[index]; }
+    int &operator[](const int index) { return data_[index]; }
+
+    void print() const;
 
 public:
     int convert_from_xy(const int x, const int y) const;

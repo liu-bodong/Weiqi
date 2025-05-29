@@ -60,3 +60,15 @@ int Board::convert_from_xy(const int x, const int y) const
         return y * num_grids_h_ + x;
     }
 }
+
+void Board::print() const
+{
+    for (int i = 0; i < num_grids_v_; i++)
+    {
+        std::cout << data_[i] << " ";
+        if ((i + 1) % num_grids_h_ == 0)
+        {
+            std::cout << std::endl;
+        }
+    }
+}

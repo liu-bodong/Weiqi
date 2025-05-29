@@ -7,8 +7,8 @@ Board board = Board(800, 800, 10, 18, 18, true); // Create a Weiqi board with 19
 enum e_state
 {
     E = 0, // Empty
-    W = 1, // White stone
-    B = 2  // Black stone
+    B = 1, // Black stone
+    W = 2  // White stone
 };
 
 /**
@@ -42,7 +42,7 @@ void DrawWhite(Board &board)
         {
             int i = (idx) % 19;
             int j = (idx) / 19;
-            circle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
+            solidcircle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
         }
     }
 }
@@ -57,7 +57,7 @@ void DrawBlack(Board &board)
         {
             int i = (idx) % 19;
             int j = (idx) / 19;
-            solidcircle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
+            circle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
         }
     }
 }
@@ -74,7 +74,7 @@ int main()
 
     initgraph(1000, 1000);
     bool running = true;
-    bool current_player = 0; // 0 for white, 1 for black
+    bool current_player = 0; // 0 for black, 1 for white
     int x = 0;
     int y = 0;
     int pos = 0;
@@ -89,33 +89,52 @@ int main()
 
         while (peekmessage(&msg))
         {
-
-            if (msg.message == WM_LBUTTONDOWN)
+            if (msg.message == WM_MOUSEMOVE)
             {
                 x = msg.x;
                 y = msg.y;
-                pos = positionOnBoard(board, x, y);
+            }
+
+            if (msg.message == WM_LBUTTONDOWN)
+            {
+                // x = msg.x;
+                // y = msg.y;
+                pos = positionOnBoard(board, msg.x, msg.y);
 
                 if (pos != -1 && board[pos] == e_state::E)
                 {
                     if (!current_player)
                     {
-                        board[pos] = e_state::W;
+                        board[pos] = e_state::B;
                         current_player = !current_player;
+                        // board.print();
                     }
                     else
                     {
-                        board[pos] = e_state::B;
+                        board[pos] = e_state::W;
                         current_player = !current_player;
+                        // board.print();
                     }
                 }
             }
         }
 
         // Draw
+        cleardevice();
         board.draw_board();
         DrawBlack(board);
         DrawWhite(board);
+        if (current_player)
+        {
+            int grid_size = board.grid_size_h_;
+            solidcircle(x, y, grid_size / 2 - 5);
+        }
+        else
+        {
+            int grid_size = board.grid_size_h_;
+            circle(x, y, grid_size / 2 - 5);
+        }
+
         FlushBatchDraw();
 
         // Check Win Condition
