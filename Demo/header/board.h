@@ -1,3 +1,4 @@
+#pragma once
 #include <graphics.h>
 #include <vector>
 #include <iostream>
@@ -38,8 +39,8 @@ public:
 
     int operator[](const int index) const { return data_[index]; }
 
-    int &operator[](const int index) { return data_[index]; }
+    int& operator[](const int index) { return data_[index]; }
 
 public:
-    int convert_from_xy(const int x, const int y) const { return (x - 1) * num_grids_h_ + y - 1; }
+    int convert_from_xy(const int x, const int y) const;
 };

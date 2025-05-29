@@ -48,3 +48,15 @@ void Board::set_at(const int x, const int y, const int value)
     }
     data_[convert_from_xy(x, y)] = value;
 }
+
+int Board::convert_from_xy(const int x, const int y) const
+{
+    if (weiqi_mode_)
+    {
+        return y * (num_grids_h_ + 1) + x;
+    }
+    else
+    {
+        return y * num_grids_h_ + x;
+    }
+}

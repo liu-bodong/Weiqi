@@ -21,14 +21,16 @@
     <ClCompile Include="src\tic_tac_toe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="header\board.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\weiqi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="header\board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

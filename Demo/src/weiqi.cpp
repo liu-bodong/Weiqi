@@ -38,13 +38,12 @@ void DrawWhite(Board &board)
     int margin = board.margin_;
     for (int idx = 0; idx < 361; idx++)
     {
-        if (board[idx] == e_state::B || board[idx] == e_state::E)
+        if (board[idx] != e_state::B && board[idx] != e_state::E)
         {
-            continue;
+            int i = (idx) % 19;
+            int j = (idx) / 19;
+            circle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
         }
-        int row = (idx) % 19;
-        int column = (idx) / 19;
-        circle(column * grid_size + margin, row * grid_size + margin, grid_size / 2 - 5);
     }
 }
 
@@ -54,18 +53,25 @@ void DrawBlack(Board &board)
     int margin = board.margin_;
     for (int idx = 0; idx < 361; idx++)
     {
-        if (board[idx] == e_state::W || board[idx] == e_state::E)
+        if (board[idx] != e_state::W && board[idx] != e_state::E)
         {
-            continue;
+            int i = (idx) % 19;
+            int j = (idx) / 19;
+            solidcircle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
         }
-        int i = (idx) % 19;
-        int j = (idx) / 19;
-        solidcircle(i * grid_size + margin, j * grid_size + margin, grid_size / 2 - 5);
     }
 }
 
 int main()
 {
+    // Initialize graphics
+    //     std::cout << board.convert_from_xy(0, 0) << std::endl;
+    //     std::cout << board.convert_from_xy(1, 0) << std::endl;
+    //     std::cout << board.convert_from_xy(0, 1) << std::endl;
+    //     std::cout << board.convert_from_xy(18, 18) << std::endl;
+    //     std::cout << board.convert_from_xy(19, 19) << std::endl;
+    //     return 0;
+
     initgraph(1000, 1000);
     bool running = true;
     bool current_player = 0; // 0 for white, 1 for black

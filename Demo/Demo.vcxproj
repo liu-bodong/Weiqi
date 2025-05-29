@@ -130,8 +130,10 @@
     <ClCompile Include="src\ball.cpp" />
     <ClCompile Include="src\board.cpp" />
     <ClCompile Include="src\tic_tac_toe.cpp" />
-    <ClCompile Include="header\board.h" />
     <ClCompile Include="src\weiqi.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="header\board.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
