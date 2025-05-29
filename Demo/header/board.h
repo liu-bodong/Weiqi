@@ -1,6 +1,7 @@
 #pragma once
 #include <graphics.h>
 #include <vector>
+#include <utility>
 #include <iostream>
 
 class Board
@@ -32,7 +33,7 @@ public:
     void draw_board() const;
     bool is_full() const { return capacity_ == num_pieces_; }
     int get_num() const { return this->num_pieces_; };
-    int get_at(const int x, const int y) const { return data_[convert_from_xy(x, y)]; }
+    int get_at(const int x, const int y) const { return data_[xy_to_index(x, y)]; }
 
     void clear_at(const int x, const int y);
     void set_at(const int x, const int y, const int value);
@@ -44,5 +45,6 @@ public:
     void print() const;
 
 public:
-    int convert_from_xy(const int x, const int y) const;
+    int xy_to_index(const int x, const int y) const;
+    std::pair<int, int> index_to_xy(const int index) const;
 };

@@ -6,59 +6,84 @@ Board::Board(const int width, const int height, const int margin, const int num_
     board_size_h_ = width_ - 2 * margin_;
     grid_size_v_ = board_size_v_ / num_grids_v_;
     grid_size_h_ = board_size_h_ / num_grids_h_;
-    if (weiqi_mode_)
-    {
-        capacity_ = (num_grids_h_ + 1) * (num_grids_v_ + 1);
-    }
-    else
-    {
-        capacity_ = num_grids_h_ * num_grids_v_;
-    }
+    capacity_ = num_grids_h_ * num_grids_v_;
     std::vector<int> vec(capacity_, 0);
     data_ = vec;
 }
 
 void Board::draw_board() const
 {
-    int num_lines_v = num_grids_v_;
-    int num_lines_h = num_grids_h_;
-
-    for (int i = 0; i <= num_lines_v; i++)
+    setlinecolor(BLACK);
+    if (weiqi_mode_)
     {
-        line(margin_, margin_ + i * grid_size_v_, margin_ + board_size_h_, margin_ + i * grid_size_v_);
+        // Draw the weiqi board
+
+        int offset = grid_size_h_ / 2;
+        for (int i = 0; i < num_grids_v_; i++)
+        {
+            line(margin_ + offset,
+                 margin_ + i * grid_size_v_ + offset,
+                 margin_ + board_size_h_ - offset,
+                 margin_ + i * grid_size_v_ + offset);
+        }
+
+        for (int i = 0; i < num_grids_h_; i++)
+        {
+            line(margin_ + i * grid_size_h_ + offset,
+                 margin_ + offset,
+                 margin_ + i * grid_size_h_ + offset,
+                 margin_ + board_size_v_ - offset);
+        }
+        // star positions
+        setfillcolor(BLACK);
+        solidcircle(margin_ + offset + 3 * grid_size_h_, margin_ + offset + 3 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 9 * grid_size_h_, margin_ + offset + 3 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 15 * grid_size_h_, margin_ + offset + 3 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 3 * grid_size_h_, margin_ + offset + 9 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 9 * grid_size_h_, margin_ + offset + 9 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 15 * grid_size_h_, margin_ + offset + 9 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 3 * grid_size_h_, margin_ + offset + 15 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 9 * grid_size_h_, margin_ + offset + 15 * grid_size_v_, 4);
+        solidcircle(margin_ + offset + 15 * grid_size_h_, margin_ + offset + 15 * grid_size_v_, 4);
     }
-
-    for (int i = 0; i <= num_lines_h; i++)
+    else
     {
-        line(margin_ + i * grid_size_h_, margin_, margin_ + i * grid_size_h_, margin_ + board_size_v_); // vertical line
+        // Draw the chessboard
+        for (int i = 0; i <= num_grids_v_; i++)
+        {
+            line(margin_, margin_ + i * grid_size_v_, margin_ + board_size_h_, margin_ + i * grid_size_v_);
+        }
+
+        for (int i = 0; i <= num_grids_h_; i++)
+        {
+            line(margin_ + i * grid_size_h_, margin_, margin_ + i * grid_size_h_, margin_ + board_size_v_);
+        }
     }
 }
 
 void Board::clear_at(const int x, const int y)
 {
     num_pieces_--;
-    data_[convert_from_xy(x, y)] = 0;
+    data_[xy_to_index(x, y)] = 0;
 }
 
 void Board::set_at(const int x, const int y, const int value)
 {
-    if (data_[convert_from_xy(x, y)] == 0)
+    if (data_[xy_to_index(x, y)] == 0)
     {
         num_pieces_++;
     }
-    data_[convert_from_xy(x, y)] = value;
+    data_[xy_to_index(x, y)] = value;
 }
 
-int Board::convert_from_xy(const int x, const int y) const
+int Board::xy_to_index(const int x, const int y) const
 {
-    if (weiqi_mode_)
-    {
-        return y * (num_grids_h_ + 1) + x;
-    }
-    else
-    {
-        return y * num_grids_h_ + x;
-    }
+    return y * num_grids_h_ + x;
+}
+
+std::pair<int, int> Board::index_to_xy(const int index) const
+{
+    return {index % num_grids_h_, index / num_grids_h_};
 }
 
 void Board::print() const
