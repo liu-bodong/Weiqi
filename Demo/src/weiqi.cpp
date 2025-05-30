@@ -31,37 +31,26 @@ int positionOnBoard(const Board &board, int x, int y)
     return board.xy_to_index(col, row); // Return the index in the board vector
 }
 
-void DrawWhite(Board &board)
+void DrawStones(Board &board)
 {
     int grid_size = board.grid_size_h_;
     int margin = board.margin_;
     int weiqi_offset = grid_size / 2;
-    for (int idx = 0; idx < 361; idx++)
+    int size = board.num_grids_h_ * board.num_grids_v_;
+    for (int idx = 0; idx < size; ++idx)
     {
-        if (board[idx] != e_state::B && board[idx] != e_state::E)
+        if (board[idx] == e_state::B)
         {
-            int i = (idx) % 19;
-            int j = (idx) / 19;
+            auto [i, j] = board.index_to_xy(idx);
+            setfillcolor(BLACK);
+            solidcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
+        }
+        else if (board[idx] == e_state::W)
+        {
+            auto [i, j] = board.index_to_xy(idx);
             setfillcolor(WHITE);
             setlinecolor(BLACK);
             fillcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
-        }
-    }
-}
-
-void DrawBlack(Board &board)
-{
-    int grid_size = board.grid_size_h_;
-    int margin = board.margin_;
-    int weiqi_offset = grid_size / 2;
-    for (int idx = 0; idx < 361; idx++)
-    {
-        if (board[idx] != e_state::W && board[idx] != e_state::E)
-        {
-            int i = (idx) % 19;
-            int j = (idx) / 19;
-            setfillcolor(BLACK);
-            solidcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
         }
     }
 }
@@ -89,8 +78,8 @@ void DrawCursor(Board &board, const int ind, const int cur_player)
 
 int main()
 {
-    Board board = Board(800, 800, 10, 19, 19, true); // Create a Weiqi board with 19x19 gri
-    initgraph(1000, 1000);
+    Board board = Board(800, 800, 10, 19, 19, true); // Create a Weiqi board with 19x19 grids
+    initgraph(800, 800);
     bool running = true;
     bool current_player = 0; // 0 for black, 1 for white
     int x = 0;
@@ -98,7 +87,6 @@ int main()
     int cur_ind = -1;
 
     BeginBatchDraw();
-
 
     setbkcolor(0xCDEBFF);
 
@@ -145,9 +133,7 @@ int main()
         cleardevice();
         board.draw_board();
         DrawCursor(board, cur_ind, current_player);
-
-        DrawBlack(board);
-        DrawWhite(board);
+        DrawStones(board);
 
         FlushBatchDraw();
 

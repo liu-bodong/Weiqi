@@ -32,5 +32,8 @@
     <ClInclude Include="header\board.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\draw_board_strategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
