@@ -1,64 +1,16 @@
 #include "../header/board.h"
 
-Board::Board(const int width, const int height, const int margin, const int num_grids_v, const int num_grids_h, const bool weiqi_mode) : width_(width), height_(height), margin_(margin), num_grids_v_(num_grids_v), num_grids_h_(num_grids_h), weiqi_mode_(weiqi_mode)
+Board::Board(DrawBoardStrategy *draw_strategy, int num_h, int num_v)
+    : draw_strategy_(draw_strategy), num_h_(num_h), num_v_(num_v)
 {
-    board_size_v_ = height_ - 2 * margin_;
-    board_size_h_ = width_ - 2 * margin_;
-    grid_size_v_ = board_size_v_ / num_grids_v_;
-    grid_size_h_ = board_size_h_ / num_grids_h_;
-    capacity_ = num_grids_h_ * num_grids_v_;
-    std::vector<int> vec(capacity_, 0);
-    data_ = vec;
+    capacity_ = draw_strategy_->get_capacity();
+    num_pieces_ = 0;
+    data_ = std::vector<int>(capacity_, 0);
 }
 
 void Board::draw_board() const
 {
-    setlinecolor(BLACK);
-    if (weiqi_mode_)
-    {
-        // Draw the weiqi board
-
-        int offset = grid_size_h_ / 2;
-        for (int i = 0; i < num_grids_v_; i++)
-        {
-            line(margin_ + offset,
-                 margin_ + i * grid_size_v_ + offset,
-                 margin_ + board_size_h_ - offset,
-                 margin_ + i * grid_size_v_ + offset);
-        }
-
-        for (int i = 0; i < num_grids_h_; i++)
-        {
-            line(margin_ + i * grid_size_h_ + offset,
-                 margin_ + offset,
-                 margin_ + i * grid_size_h_ + offset,
-                 margin_ + board_size_v_ - offset);
-        }
-        // star positions
-        setfillcolor(BLACK);
-        solidcircle(margin_ + offset + 3 * grid_size_h_, margin_ + offset + 3 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 9 * grid_size_h_, margin_ + offset + 3 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 15 * grid_size_h_, margin_ + offset + 3 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 3 * grid_size_h_, margin_ + offset + 9 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 9 * grid_size_h_, margin_ + offset + 9 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 15 * grid_size_h_, margin_ + offset + 9 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 3 * grid_size_h_, margin_ + offset + 15 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 9 * grid_size_h_, margin_ + offset + 15 * grid_size_v_, 4);
-        solidcircle(margin_ + offset + 15 * grid_size_h_, margin_ + offset + 15 * grid_size_v_, 4);
-    }
-    else
-    {
-        // Draw the chessboard
-        for (int i = 0; i <= num_grids_v_; i++)
-        {
-            line(margin_, margin_ + i * grid_size_v_, margin_ + board_size_h_, margin_ + i * grid_size_v_);
-        }
-
-        for (int i = 0; i <= num_grids_h_; i++)
-        {
-            line(margin_ + i * grid_size_h_, margin_, margin_ + i * grid_size_h_, margin_ + board_size_v_);
-        }
-    }
+    draw_strategy_->draw();
 }
 
 void Board::clear_at(const int x, const int y)

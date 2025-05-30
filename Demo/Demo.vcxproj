@@ -132,10 +132,16 @@
     <ClCompile Include="src\board.cpp" />
     <ClCompile Include="src\tic_tac_toe.cpp" />
     <ClCompile Include="src\weiqi.cpp" />
+    <ClCompile Include="src\weiqi_draw_board_strategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\board.h" />
+    <ClInclude Include="header\chess_draw_board_strategy.h" />
     <ClInclude Include="header\draw_board_strategy.h" />
+    <ClInclude Include="header\weiqi_draw_board_strategy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

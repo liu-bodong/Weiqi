@@ -1,6 +1,8 @@
 #include <graphics.h>
 #include <iostream>
 #include "../header/board.h"
+#include "../header/draw_board_strategy.h"
+#include "../header/weiqi_draw_board_strategy.h"
 // #include "stone.cpp"
 
 enum e_state
@@ -55,30 +57,31 @@ void DrawStones(Board &board)
     }
 }
 
-void DrawCursor(Board &board, const int ind, const int cur_player)
-{
-    auto pair = board.index_to_xy(ind);
-    int x = pair.first;
-    int y = pair.second;
-    int grid_size = board.grid_size_h_;
-    int margin = board.margin_;
-    int weiqi_offset = grid_size / 2;
-    if (cur_player == 0) // Black player
-    {
-        setfillcolor(BLACK);
-        solidcircle(margin + weiqi_offset + x * grid_size, margin + weiqi_offset + y * grid_size, grid_size / 2 - 5);
-    }
-    else // White player
-    {
-        setfillcolor(WHITE);
-        setlinecolor(BLACK);
-        fillcircle(margin + weiqi_offset + x * grid_size, margin + weiqi_offset + y * grid_size, grid_size / 2 - 5);
-    }
-}
+// void DrawCursor(Board &board, const int ind, const int cur_player)
+// {
+//     auto pair = board.index_to_xy(ind);
+//     int x = pair.first;
+//     int y = pair.second;
+//     int grid_size = board.grid_size_h_;
+//     int margin = board.margin_;
+//     int weiqi_offset = grid_size / 2;
+//     if (cur_player == 0) // Black player
+//     {
+//         setfillcolor(BLACK);
+//         solidcircle(margin + weiqi_offset + x * grid_size, margin + weiqi_offset + y * grid_size, grid_size / 2 - 5);
+//     }
+//     else // White player
+//     {
+//         setfillcolor(WHITE);
+//         setlinecolor(BLACK);
+//         fillcircle(margin + weiqi_offset + x * grid_size, margin + weiqi_offset + y * grid_size, grid_size / 2 - 5);
+//     }
+// }
 
 int main()
 {
-    Board board = Board(800, 800, 10, 19, 19, true); // Create a Weiqi board with 19x19 grids
+    WeiqiDrawBoardStrategy* draw_strategy = new WeiqiDrawBoardStrategy(800, 800, 10, 19, 19);
+    Board board = Board(draw_strategy, 19, 19); // Create a Weiqi board with 19x19 grids
     initgraph(800, 800);
     bool running = true;
     bool current_player = 0; // 0 for black, 1 for white
@@ -132,7 +135,7 @@ int main()
         // Draw
         cleardevice();
         board.draw_board();
-        DrawCursor(board, cur_ind, current_player);
+/*        / *DrawCursor* /(board, cur_ind, current_player);*/
         DrawStones(board);
 
         FlushBatchDraw();

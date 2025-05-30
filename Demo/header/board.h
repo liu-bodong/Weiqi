@@ -8,7 +8,7 @@
 
 class Board
 {
-private:
+public:
     std::vector<int> data_;
     int num_pieces_;
     int capacity_;
@@ -34,7 +34,7 @@ public:
 
     void print() const;
 
-private:
+public:
     int xy_to_index(const int x, const int y) const;
     std::pair<int, int> index_to_xy(const int index) const;
 };
