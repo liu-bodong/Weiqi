@@ -29,6 +29,7 @@ public:
     void clear_at(const int x, const int y);
     void set_at(const int x, const int y, const int value);
 
+private:
     int operator[](const int index) const { return data_[index]; }
     int &operator[](const int index) { return data_[index]; }
 

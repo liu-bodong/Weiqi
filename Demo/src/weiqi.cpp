@@ -20,39 +20,41 @@ enum e_state
  * @param y
  * @return int
  */
-int positionOnBoard(const Board &board, int x, int y)
+std::pair<int, int> positionOnBoard(const DrawBoardStrategy *dbs, int x, int y)
 {
-    int cell_size_v = board.grid_size_v_;
-    int cell_size_h = board.grid_size_h_;
-    int row = (y - board.margin_) / cell_size_v;
-    int col = (x - board.margin_) / cell_size_h;
-    if (row < 0 || row >= board.num_grids_v_ || col < 0 || col >= board.num_grids_h_)
+    int cell_size_v = dbs->grid_size_v_;
+    int cell_size_h = dbs->grid_size_h_;
+    int row = (y - dbs->margin_) / cell_size_v;
+    int col = (x - dbs->margin_) / cell_size_h;
+    if (row < 0 || row >= dbs->num_lines_v_ - 1 || col < 0 || col >= dbs->num_lines_h_ - 1)
     {
-        return -1; // Invalid position
+        return {-1, -1}; // Invalid position
     }
-    return board.xy_to_index(col, row); // Return the index in the board vector
+    return {col, row}; // Return as (col, row
 }
 
 void DrawStones(Board &board)
 {
-    int grid_size = board.grid_size_h_;
-    int margin = board.margin_;
+    auto dbs = board.draw_strategy_;
+    int grid_size = dbs->grid_size_h_;
+    int margin = dbs->margin_;
     int weiqi_offset = grid_size / 2;
-    int size = board.num_grids_h_ * board.num_grids_v_;
-    for (int idx = 0; idx < size; ++idx)
+    int size = (dbs->num_lines_h_ - 1) * (dbs->num_lines_v_ - 1);
+    for (int i = 0; i < board.num_h_; i++)
     {
-        if (board[idx] == e_state::B)
+        for (int j = 0; j < board.num_v_; j++)
         {
-            auto [i, j] = board.index_to_xy(idx);
-            setfillcolor(BLACK);
-            solidcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
-        }
-        else if (board[idx] == e_state::W)
-        {
-            auto [i, j] = board.index_to_xy(idx);
-            setfillcolor(WHITE);
-            setlinecolor(BLACK);
-            fillcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
+            if (board.get_at(i, j) == e_state::B)
+            {
+                setfillcolor(BLACK);
+                solidcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
+            }
+            else if (board.get_at(i, j) == e_state::W)
+            {
+                setfillcolor(WHITE);
+                setlinecolor(BLACK);
+                fillcircle(margin + weiqi_offset + i * grid_size, margin + weiqi_offset + j * grid_size, grid_size / 2 - 1);
+            }
         }
     }
 }
@@ -80,14 +82,14 @@ void DrawStones(Board &board)
 
 int main()
 {
-    WeiqiDrawBoardStrategy* draw_strategy = new WeiqiDrawBoardStrategy(800, 800, 10, 19, 19);
+    WeiqiDrawBoardStrategy *draw_strategy = new WeiqiDrawBoardStrategy(800, 800, 10, 19, 19);
     Board board = Board(draw_strategy, 19, 19); // Create a Weiqi board with 19x19 grids
     initgraph(800, 800);
     bool running = true;
     bool current_player = 0; // 0 for black, 1 for white
     int x = 0;
     int y = 0;
-    int cur_ind = -1;
+    std::pair<int, int> pos_pair;
 
     BeginBatchDraw();
 
@@ -105,26 +107,26 @@ int main()
             {
                 x = msg.x;
                 y = msg.y;
-                cur_ind = positionOnBoard(board, x, y);
+                pos_pair = positionOnBoard(draw_strategy, x, y);
             }
 
             if (msg.message == WM_LBUTTONDOWN)
             {
                 // x = msg.x;
                 // y = msg.y;
-                int pos = positionOnBoard(board, msg.x, msg.y);
+                auto [col, row] = positionOnBoard(draw_strategy, msg.x, msg.y);
 
-                if (pos != -1 && board[pos] == e_state::E)
+                if (col != -1 && row != -1 && board.get_at(col, row) == e_state::E)
                 {
                     if (!current_player)
                     {
-                        board[pos] = e_state::B;
+                        board.set_at(col, row, e_state::B);
                         current_player = !current_player;
                         // board.print();
                     }
                     else
                     {
-                        board[pos] = e_state::W;
+                        board.set_at(col, row, e_state::W);
                         current_player = !current_player;
                         // board.print();
                     }
@@ -135,7 +137,7 @@ int main()
         // Draw
         cleardevice();
         board.draw_board();
-/*        / *DrawCursor* /(board, cur_ind, current_player);*/
+        /*        / *DrawCursor* /(board, cur_ind, current_player);*/
         DrawStones(board);
 
         FlushBatchDraw();

@@ -2,7 +2,7 @@
 
 class DrawBoardStrategy
 {
-protected:
+public:
     int width_;
     int height_;
     int margin_;
@@ -32,5 +32,4 @@ public:
     int get_board_size_h() const { return board_size_h_; }
     int get_grid_size_v() const { return grid_size_v_; }
     int get_grid_size_h() const { return grid_size_h_; }
-    int get_capacity() const { return capacity_; }
 };
